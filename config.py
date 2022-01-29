@@ -4,6 +4,8 @@ import MetaTrader5 as mt5
 
 timezone = pytz.timezone("Etc/UTC")
 
+username = "user123"
+password = D8MwIKh5gLL09imk
 
 
 symbols = ["EURUSD", "EURGBP"]
