@@ -10,7 +10,7 @@ def get_data(symbol, timeframe, date_from, date_to):
         print("initialize() failed, error code =",mt5.last_error())
         quit()
     else:
-        mt5.copy_rates_range(symbol, timeframe, date_from, date_to)
+        return mt5.copy_rates_range(symbol, timeframe, date_from, date_to)
 
 # def update_data_latest():
 
