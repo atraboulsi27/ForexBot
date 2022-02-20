@@ -4,7 +4,7 @@ import MetaTrader5 as mt5
 
 timezone = pytz.timezone("Etc/UTC")
 
-
+#29 pairs
 symbols = ["XAUUSD", "USDJPY", "USDCAD", "USDCHF", "EURUSD", "EURJPY", "EURGBP", "EURAUD", "EURNZD", "EURCAD", "EURCHF", "GBPUSD", "GBPJPY", "GBPAUD", "GBPNZD", "GBPCAD", "GBPCHF", "AUDUSD", "AUDJPY", "AUDNZD", "AUDCAD", "AUDCHF", "NZDUSD", "NZDJPY", "NZDCAD", "NZDCHF", "CADJPY", "CADCHF", "CHFJPY"]
 
 # M5 and M15 => 12 2021
