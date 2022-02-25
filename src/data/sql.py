@@ -17,4 +17,8 @@ def insert_records(records):
     if len(records) == len(requests):
         mycol.bulk_write(requests)
 
+#all optional args, query by arg each time one is found ex. by date, by symbol
+# def retrieve_records()
+
+
 
