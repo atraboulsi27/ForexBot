@@ -3,7 +3,7 @@ sys.path.append(os.path.join(sys.path[0],'..'))
 from src.config import symbols, timeframes, timezone, date_to
 from datetime import datetime
 from src.API.api import get_data
-from src.data.sql import mycol
+from src.data.config import mycol
 from src.data.transform import transform_record
 import pytest
 
@@ -45,28 +45,28 @@ def test_number_of_records(candles_api):
 
 
 #idea: pass over each candle in api, transform and then find in db with count, if count > 2 add it to array print array
-def test_api_record_in_db(candles_api):
+# def test_api_record_in_db(candles_api):
 
-    candles_db = []
-    for candle_api in candles_api:
+#     candles_db = []
+#     for candle_api in candles_api:
         
-        search = transform_record(candle_api, "x","x")
-        for e in ["Symbol", "Timeframe"]:
-            search.pop(e)
-        found = list(mycol.find(search))
-        #not found case
-        if len(found) == 0:
-            print("Not found: {} ==> {}\n".format(search, candle_api))
-        #if duplicate
-        if len(found) > 1:
-            print("Duplicate: {} ==> {}\n".format(search, candle_api))
-            print("Number of occurences: {}\n".format(len(found)))
-            candles_db.append(found[0])
-        #one instance found <- wanted result
-        if len(found) == 1:
-            candles_db.append(found[0])
+#         search = transform_record(candle_api, "x","x")
+#         for e in ["Symbol", "Timeframe"]:
+#             search.pop(e)
+#         found = list(mycol.find(search))
+#         #not found case
+#         if len(found) == 0:
+#             print("Not found: {} ==> {}\n".format(search, candle_api))
+#         #if duplicate
+#         if len(found) > 1:
+#             print("Duplicate: {} ==> {}\n".format(search, candle_api))
+#             print("Number of occurences: {}\n".format(len(found)))
+#             candles_db.append(found[0])
+#         #one instance found <- wanted result
+#         if len(found) == 1:
+#             candles_db.append(found[0])
 
-    assert len(candle_api) == len(candles_db)
+#     assert len(candle_api) == len(candles_db)
 
         
 

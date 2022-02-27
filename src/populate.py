@@ -2,8 +2,9 @@
 from datetime import datetime
 from config import symbols, timeframes, timezone, date_to
 from API.api import get_data
-from data.sql import insert_records
+from data.sql import upsert_records, insert_records
 from data.transform import transform_record
+from time import time
 
 def get_m5():
     date_from = datetime(2021, 12, 1, tzinfo=timezone)
@@ -69,7 +70,8 @@ def get_w1():
         insert_records(transformed)
 
 if __name__ == '__main__':
-    print("Fetching and inserting data, will take a long time\n")
+    start = time()
+    print("Fetching and inserting data\n")
     get_m5()
     get_m15()
     get_m30()
@@ -77,4 +79,5 @@ if __name__ == '__main__':
     get_h4()
     get_d1()
     get_w1()
-    print("Data fetch and insertion done\n")
+    end = time()
+    print("Data fetch and insertion done, time taken is {}\n".format(end - start))
