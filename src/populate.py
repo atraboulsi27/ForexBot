@@ -87,8 +87,6 @@ def retrieve_latest_data():
             
                 insert_records(transformed)
 
-
-
                 
 # if __name__ == '__main__':
 #     start = time()
