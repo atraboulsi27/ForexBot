@@ -1,8 +1,8 @@
-import pytz
+from pytz import timezone as tz
 from datetime import datetime
 import MetaTrader5 as mt5
 
-timezone = pytz.timezone("Etc/UTC")
+timezone = tz("Etc/UTC")
 
 #29 pairs
 symbols = ["XAUUSD", "USDJPY", "USDCAD", "USDCHF", "EURUSD", "EURJPY", "EURGBP", "EURAUD", "EURNZD", "EURCAD", "EURCHF", "GBPUSD", "GBPJPY", "GBPAUD", "GBPNZD", "GBPCAD", "GBPCHF", "AUDUSD", "AUDJPY", "AUDNZD", "AUDCAD", "AUDCHF", "NZDUSD", "NZDJPY", "NZDCAD", "NZDCHF", "CADJPY", "CADCHF", "CHFJPY"]
@@ -13,6 +13,6 @@ symbols = ["XAUUSD", "USDJPY", "USDCAD", "USDCHF", "EURUSD", "EURJPY", "EURGBP",
 # D1 and W1 => 01 2021
 timeframes = [mt5.TIMEFRAME_M5, mt5.TIMEFRAME_M15 ,mt5.TIMEFRAME_M30, mt5.TIMEFRAME_H1, mt5.TIMEFRAME_H4, mt5.TIMEFRAME_D1, mt5.TIMEFRAME_W1]
 
-date_to = datetime(2022, 2, 4, tzinfo=timezone)
+date_to = datetime.now(timezone)
 
 
