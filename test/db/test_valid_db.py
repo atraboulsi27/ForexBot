@@ -1,9 +1,12 @@
 import sys, os
+
+from src.data.sql import get_latest_document, insert_records
+
 sys.path.append(os.path.join(sys.path[0],'../..'))
-from src.config import symbols, timeframes, timezone, date_to
+from src.config import symbols, timeframes, timezone, date_to, timeframes_string
 from datetime import datetime
 from src.API.api import get_data
-from src.data.config import mycol, client
+from data.db_config import mycol, client
 from src.data.transform import transform_record
 import pytest
 
@@ -39,6 +42,28 @@ def candles_testdb():
     mydb = client["test_forexdb"]
     return mydb["candles"]
 
+@pytest.fixture
+def mock_latest_data_count():
+    def retrieve_latest_data_count():
+        all_data = []
+        for symbol in symbols:
+            for t_s, t in zip(timeframes_string,timeframes):
+                date = get_latest_document(symbol, t_s)
+                date_from_localized = timezone.localize(date)
+                candles = get_data(symbol, t, date_from_localized, date_to)
+                # print("Symbol: {}, timeframe: {}, number of candles: {}\n".format(symbol,t_s, len(candles)))
+                # remove first element since it overlaps with the one in the database
+                candles = candles[1:]
+                if len(candles) > 0:
+                    transformed = []
+
+                    for candle in candles:
+                        transformed.append(transform_record(candle, symbol, t_s))
+
+                    all_data.extend(transformed)
+        return len(all_data)
+    return retrieve_latest_data_count()
+
 
 #fixture that takes info and returns record from db
 
@@ -49,6 +74,14 @@ def test_number_of_records(candles_api, candles_testdb):
 
     assert count_api == count_realdb
     assert count_api == count_testdb
+
+def test_retrieve_latest_data(candles_api, mock_latest_data_count):
+    count_api = len(candles_api)
+    count_db = mycol.count_documents({})
+    count_latest = mock_latest_data_count
+
+    assert count_api == (count_db + count_latest)
+
 
 # def test_records(candles_api, candles_testdb):
     

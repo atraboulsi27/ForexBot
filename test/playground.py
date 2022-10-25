@@ -1,22 +1,21 @@
 import sys, os
 sys.path.append(os.path.join(sys.path[0],'..'))
-from src.data.config import client
+from data.db_config import client
 import pymongo
 from src.API.api import get_data
-from src.data.sql import get_latest_time
+from src.data.sql import get_latest_document
 from datetime import datetime
 from src.config import timezone, timeframes
 
-doc = get_latest_time("AUDJPY", "M5")
+doc = get_latest_document("AUDJPY", "M5")
 date = doc["Date"]
 date_from_localized = timezone.localize(date)
 date_to_localized = datetime.now(timezone)
-data = (get_data("AUDJPY", timeframes[3], date, datetime.now()))
-data2 = data[1:]
+data = get_data("AUDJPY", timeframes[3], date, datetime.now())
+# data2 = data[1:]
 #the date_from is included
 
-print(data2==data)
-
+print(data)
 
 
 

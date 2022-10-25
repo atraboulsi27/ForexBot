@@ -1,6 +1,8 @@
-#contains all the sql queries needed
-from pymongo import ReplaceOne,InsertOne
-from .config import mycol
+# contains all the sql queries needed
+from datetime import datetime
+from pymongo import ReplaceOne, InsertOne
+from .db_config import mycol
+
 
 # takes an array of one record shaped by the transform function
 def insert_records(records):
@@ -10,8 +12,10 @@ def insert_records(records):
     if len(records) == len(requests):
         mycol.bulk_write(requests)
 
+
 def insert_record(record):
     mycol.insert_one(record)
+
 
 def upsert_records(records):
     requests = []
@@ -20,21 +24,22 @@ def upsert_records(records):
     if len(records) == len(requests):
         mycol.bulk_write(requests)
 
-#returns a dictionary of the symbol, timeframe and date of the document with the latest date
-def get_latest_time(symbol, timeframe):
-    pipeline = [{"$match": { "Symbol": symbol , "Timeframe": timeframe } },
+
+# returns the date of the latest document, returns 2021-01-01 if there are no documents (fresh db())
+def get_latest_date(symbol, timeframe):
+    pipeline = [{"$match": {"Symbol": symbol, "Timeframe": timeframe}},
                 {
                     "$project": {
                         "Date": {"$toDate": "$Date"},
                         "Symbol": 1,
                         "Timeframe": 1,
                     }
-                }, 
+                },
                 {
                     "$group":
                         {
-                            "_id" : { "s": "$Symbol","t": "$Timeframe"},
-                            "maxDate": { "$max": "$Date" }
+                            "_id": {"s": "$Symbol", "t": "$Timeframe"},
+                            "maxDate": {"$max": "$Date"}
                         }
                 },
                 {
@@ -48,12 +53,8 @@ def get_latest_time(symbol, timeframe):
                         }
                 }
                 ]
-    result = list(mycol.aggregate(pipeline, allowDiskUse = True))[0]
-    # result["Date"] = result["Date"].strftime('%Y-%m-%d %H:%M:%S')
-    return result         
-
-#all optional args, query by arg each time one is found ex. by date, by symbol
-# def retrieve_records()
-
-
-
+    db_record = list(mycol.aggregate(pipeline, allowDiskUse=True))
+    if db_record == []:
+        return datetime(2021,1,1,00,00,00)
+    else:  
+        return list(mycol.aggregate(pipeline, allowDiskUse=True))[0]["Date"]
