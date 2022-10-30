@@ -2,7 +2,7 @@
 from datetime import datetime
 from config import symbols, timeframes, timezone, date_to, timeframes_string
 from API.api import get_data
-from data.sql import get_latest_date, upsert_records, insert_records
+from data.sql import get_latest_date, insert_records
 from data.transform import transform_record
 from time import time
 
@@ -18,17 +18,21 @@ def retrieve_latest_data():
             candles = get_data(symbol, t, date_from_localized, date_to)
             #remove first element since it overlaps with the one in the database
             candles = candles[1:]
+            
+            if candles.size == 0:
+                continue
+            else:
+                transformed = []
 
-            transformed = []
-            for candle in candles:
-                transformed.append(transform_record(candle, symbol, t_s))
-        
-            insert_records(transformed)
+                for candle in candles:
+                    transformed.append(transform_record(candle, symbol, t_s))
+            
+                insert_records(transformed)
 
                 
 if __name__ == '__main__':
     start = time()
-    print("Fetching and inserting data\n")
+    print("Fetching and inserting data if necessary\n")
     retrieve_latest_data()
     end = time()
     print("Data fetch and insertion done, time taken is {}\n".format(end - start))

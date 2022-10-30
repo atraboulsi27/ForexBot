@@ -24,17 +24,15 @@ def upsert_records(records):
     if len(records) == len(requests):
         mycol.bulk_write(requests)
 
+def get_records(symbol, timeframe, date_from, date_to):
+    query = {"$and": [{"Symbol": symbol},{"Timeframe": timeframe},{"Date":{"$gte":date_from,"$lt":date_to}}]}
+    return list(mycol.find(query))
+
+
 
 # returns the date of the latest document, returns 2021-01-01 if there are no documents (fresh db())
 def get_latest_date(symbol, timeframe):
     pipeline = [{"$match": {"Symbol": symbol, "Timeframe": timeframe}},
-                {
-                    "$project": {
-                        "Date": {"$toDate": "$Date"},
-                        "Symbol": 1,
-                        "Timeframe": 1,
-                    }
-                },
                 {
                     "$group":
                         {
@@ -57,4 +55,4 @@ def get_latest_date(symbol, timeframe):
     if db_record == []:
         return datetime(2021,1,1,00,00,00)
     else:  
-        return list(mycol.aggregate(pipeline, allowDiskUse=True))[0]["Date"]
+        return db_record[0]["Date"]
