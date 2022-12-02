@@ -25,7 +25,7 @@ def upsert_records(records):
         mycol.bulk_write(requests)
 
 def get_records(symbol, timeframe, date_from, date_to):
-    query = {"$and": [{"Symbol": symbol},{"Timeframe": timeframe},{"Date":{"$gte":date_from,"$lt":date_to}}]}
+    query = {"$and": [{"Symbol": symbol},{"Timeframe": timeframe},{"Date":{"$gt":date_from,"$lte":date_to}}]}
     return list(mycol.find(query))
 
 
