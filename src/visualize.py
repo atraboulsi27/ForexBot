@@ -4,7 +4,7 @@ from fns.charts import generate_chart
 from populate import retrieve_latest_data
                 
 if __name__ == '__main__':
-    retrieve_latest_data()
+    # retrieve_latest_data()
     symbol = input("Please input symbol i.e. XAUUSD: ")
     timeframe = input("Please input timeframes i.e. H1: ")
     start_year = int(input("Please input start year i.e. 2021 (only use as old as 2021 for now): "))
